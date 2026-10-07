@@ -1,0 +1,6 @@
+{
+  "summary": "Plan architectural et fonctionnel pour la gestion des duels P vs P (Joueur contre Joueur et Joueur contre Leviers Admin). Détaille le fonctionnement des cagnottes de duels, le reversement des gains au compte administrateur en cas de victoire des leviers, la possibilité de défier plusieurs leviers simultanément, ainsi que le suivi des performances P vs P dans la console d'administration.",
+  "updatedAt": "2026-10-06T18:03:32.166197103Z",
+  "requestFeedback": true,
+  "userFacing": true
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Remix: Konamix",
+  "description": "Plateforme mobile-first de pari sportif simulé en temps réel (Oracle) avec 7 positions (P1-P7), bots Levier et paris secondaires P vs P.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,221 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and wallet information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "balance": { "type": "number", "description": "Current balance in FCFA" },
+        "role": { "type": "string", "enum": ["admin", "user"] },
+        "isBanned": { "type": "boolean" },
+        "kycStatus": { "type": "string", "enum": ["none", "pending", "verified", "rejected"] },
+        "gender": { "type": "string", "enum": ["homme", "femme"] },
+        "postalCode": { "type": "string" },
+        "address": { "type": "string" },
+        "contactEmail": { "type": "string" },
+        "referralCode": { "type": "string" },
+        "referredBy": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "balance", "role"]
+    },
+    "Room": {
+      "title": "Room",
+      "description": "A betting room (Salle)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "creatorId": { "type": "string" },
+        "mode": { "type": "string", "enum": ["Expert", "Random", "Top", "Flop"] },
+        "stakePerPosition": { "type": "number" },
+        "totalStake": { "type": "number" },
+        "status": { "type": "string", "enum": ["created", "selecting", "waiting", "secondary_bets", "countdown", "simulating", "results", "finished"] },
+        "positions": { 
+          "type": "object",
+          "description": "P1 to P7 positions"
+        },
+        "isLeverageActive": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["creatorId", "mode", "stakePerPosition", "status", "positions"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Deposit or withdrawal transaction",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string", "enum": ["deposit", "withdrawal"] },
+        "amount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "method": { "type": "string", "description": "Mobile Money provider" },
+        "phoneNumber": { "type": "string" },
+        "rejectionReason": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "validatedBy": { "type": "string" }
+      },
+      "required": ["userId", "type", "amount", "status", "phoneNumber"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Admin action log",
+      "type": "object",
+      "properties": {
+        "adminId": { "type": "string" },
+        "action": { "type": "string" },
+        "targetId": { "type": "string" },
+        "details": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "AppConfig": {
+      "title": "AppConfig",
+      "description": "Global application settings",
+      "type": "object",
+      "properties": {
+        "minStake": { "type": "number" },
+        "maxStake": { "type": "number" },
+        "commissionRate": { "type": "number" },
+        "leverageEnabled": { "type": "boolean" },
+        "leverageBudget": { "type": "number" },
+        "leverageUsedToday": { "type": "number" }
+      }
+    },
+    "Team": {
+      "title": "Team",
+      "description": "Football team in the catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "logo": { "type": "string" },
+        "league": { "type": "string" }
+      },
+      "required": ["name", "league"]
+    },
+    "League": {
+      "title": "League",
+      "description": "Football league",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "code": { "type": "string" }
+      },
+      "required": ["name", "code"]
+    },
+    "LedgerAccount": {
+      "title": "LedgerAccount",
+      "description": "Financial ledger account (Double-entry system)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "e.g., USER_WALLET, ADMIN_REVENUE" },
+        "name": { "type": "string" },
+        "type": { "type": "string", "enum": ["ASSET", "LIABILITY", "EQUITY", "REVENUE", "EXPENSE"] },
+        "balance": { "type": "number", "description": "Current balance in FCFA" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "type", "balance"]
+    },
+    "LedgerTransaction": {
+      "title": "LedgerTransaction",
+      "description": "A single entry in the ledger (Grand Livre)",
+      "type": "object",
+      "properties": {
+        "transactionRef": { "type": "string", "description": "UUID grouping related debit/credit entries" },
+        "accountId": { "type": "string", "description": "Target ledger account ID" },
+        "type": { "type": "string", "enum": ["DEBIT", "CREDIT"] },
+        "amount": { "type": "number" },
+        "description": { "type": "string" },
+        "referenceType": { "type": "string", "enum": ["room", "user", "withdrawal", "deposit", "manual"] },
+        "referenceId": { "type": "string" },
+        "userId": { "type": "string", "description": "Associated user if any" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["transactionRef", "accountId", "type", "amount", "createdAt"]
+    },
+    "PaymentMethod": {
+      "title": "PaymentMethod",
+      "description": "Configurable payment method logo and settings",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "logo": { "type": "string" },
+        "color": { "type": "string" },
+        "enabled": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "logo", "enabled"]
+    },
+    "PaymentApi": {
+      "title": "PaymentApi",
+      "description": "External payment API provider configuration",
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string" },
+        "apiKey": { "type": "string" },
+        "environment": { "type": "string", "enum": ["sandbox", "live"] },
+        "isActive": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["provider", "apiKey", "environment", "isActive"]
+    }
+  },
+  "firestore": {
+    "/payment_methods/{methodId}": {
+      "schema": "PaymentMethod",
+      "description": "Available mobile money methods"
+    },
+    "/payment_apis/{apiId}": {
+      "schema": "PaymentApi",
+      "description": "Payment provider configurations"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles"
+    },
+    "/rooms/{roomId}": {
+      "schema": "Room",
+      "description": "Game rooms"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Financial transactions"
+    },
+    "/teams/{teamId}": {
+      "schema": "Team",
+      "description": "Available teams"
+    },
+    "/leagues/{leagueId}": {
+      "schema": "League",
+      "description": "Available leagues"
+    },
+    "/ledger_accounts/{accountId}": {
+      "schema": "LedgerAccount",
+      "description": "Ledger account balances"
+    },
+    "/ledger_transactions/{transactionId}": {
+      "schema": "LedgerTransaction",
+      "description": "Grand Livre entries"
+    },
+    "/admins/{userId}": {
+      "schema": { "type": "object", "properties": { "email": { "type": "string" } } },
+      "description": "Admin list for role check"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "Logs of admin actions"
+    },
+    "/config/{configId}": {
+      "schema": "AppConfig",
+      "description": "Global application configuration"
+    }
+  }
+}

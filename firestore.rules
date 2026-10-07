@@ -1,0 +1,97 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isAdmin() { 
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) || 
+        request.auth.token.email == 'ok2915015@gmail.com'
+      ); 
+    }
+
+    // CONNECTION TEST
+    match /test/{testId} {
+      allow read, write: if true;
+    }
+
+    // USERS (Public profile reads for matches, leaderboards; registration and profile management)
+    match /users/{userId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if true;
+      allow delete: if isAdmin();
+    }
+
+    // ROOMS (Public browsing of open lobbies and live match activity; gameplay)
+    match /rooms/{roomId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // TEAMS & LEAGUES (Public catalogs for team selection and match displays)
+    match /teams/{teamId} {
+      allow read, write: if true;
+    }
+
+    match /leagues/{leagueId} {
+      allow read, write: if true;
+    }
+
+    // CONFIG (System config, daily bonus rules, referral rates)
+    match /config/{configId} {
+      allow read, write: if true;
+    }
+
+    // PAYMENT METHODS & APIS
+    match /payment_methods/{methodId} {
+      allow read, write: if true;
+    }
+
+    match /payment_apis/{apiId} {
+      allow read, write: if true;
+    }
+
+    // TRANSACTIONS & WALLET
+    match /transactions/{transactionId} {
+      allow read, write: if true;
+    }
+
+    // NOTIFICATIONS
+    match /notifications/{notificationId} {
+      allow read, write: if true;
+    }
+
+    // SUPPORT & DIRECT MESSAGES
+    match /support_messages/{messageId} {
+      allow read, write: if true;
+    }
+
+    match /messages/{messageId} {
+      allow read, write: if true;
+    }
+
+    // REPORTS & AUDIT LOGS
+    match /reports/{reportId} {
+      allow read, write: if true;
+    }
+
+    match /audit_logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // ADMINS
+    match /admins/{userId} {
+      allow read, write: if true;
+    }
+
+    // FINANCIAL LEDGERS
+    match /ledger_accounts/{accountId} {
+      allow read, write: if true;
+    }
+
+    match /ledger_transactions/{txId} {
+      allow read, write: if true;
+    }
+  }
+}
